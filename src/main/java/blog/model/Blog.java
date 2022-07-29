@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class BlogDTO { //since the class is not a JPA entity, I treat it as a DTO
+public class Blog {
     private int id;
     private String text;
     private int userid;
