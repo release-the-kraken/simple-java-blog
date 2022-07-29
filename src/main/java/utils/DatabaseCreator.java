@@ -30,7 +30,7 @@ public class DatabaseCreator {
         try (Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
              Statement statement = connection.createStatement()
         ){
-            connection.setAutoCommit(false);
+            connection.setAutoCommit(false);//Using transaction because I want to be sure the following queries execute in full
 
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS blog(" +
                     "id INT NOT NULL AUTO_INCREMENT, " +
