@@ -1,14 +1,16 @@
 package blog.model;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
 public class User {
-     private String userId;
-     private String userName;
-     private String password;
-     private String permission;
-     private String readOnly;
+     private int userid;
+     private final String username;
+     private final String password;
+     private final String permission;
+     private final String readOnly;
 }
