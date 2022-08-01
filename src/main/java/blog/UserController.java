@@ -41,7 +41,7 @@ public class UserController {
         if (readonly == null || readonly.isBlank()) {
             throw new IllegalArgumentException("Field \"readonly\" cannot be empty");
         }
-        //using the builder pattern for a cleaner look
+        //using the builder pattern for cleaner code
         User user = User.builder()
                 .username(username)
                 .password(password)

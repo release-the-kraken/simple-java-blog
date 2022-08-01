@@ -1,12 +1,17 @@
 package blog.model;
 
 import lombok.RequiredArgsConstructor;
+import utils.DatabaseCreator;
 
 import java.sql.*;
 import java.util.Optional;
 
 @RequiredArgsConstructor
 public class UserDAO {
+    /*variable of keeping track of a logged-in user to pass their userid to newly created entries
+     if the user has readonly set to no (I guess this is how it is supposed to work, this was not clarified),
+    it is probably not industry standard but that is my idea of handling it*/
+    public static int validatedUsersId;
     //field for dependency injection
     private final Connection connection;
 
@@ -16,6 +21,7 @@ public class UserDAO {
         if (user == null) {
             throw new IllegalArgumentException("Failed to insert user. User is null.");
         }
+        DatabaseCreator.createTables();
         try (connection) {
             //because I'm performing more than one database operation I want to be sure that both queries will be executed
             connection.setAutoCommit(false);
@@ -46,6 +52,7 @@ public class UserDAO {
     }
 
     public Optional<User> login(String username, String password) {
+        DatabaseCreator.createTables();
         try (connection) {
             //I want to return full information on the user to be used on the frontend in case of a successful query
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM user " +
@@ -67,6 +74,9 @@ public class UserDAO {
                         .permission(permission)
                         .readOnly(readonly)
                         .build();
+                if ("no".equals(readonly)) {
+                    validatedUsersId = userid;
+                }
             }
             return Optional.ofNullable(user);
         } catch (SQLException e) {

@@ -38,11 +38,11 @@ public class DatabaseCreator {
                     "userid INT NOT NULL, " +
                     "PRIMARY KEY(id)" +
                     ")");
-
+            //adding a UNIQUE constraint on username and password since those fields should be unique in a user database
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS user(" +
                     "userid INT NOT NULL AUTO_INCREMENT, " +
-                    "username VARCHAR(45) NOT NULL, " +
-                    "password VARCHAR(45) NOT NULL, " +
+                    "username VARCHAR(45) UNIQUE NOT NULL, " +
+                    "password VARCHAR(45) UNIQUE NOT NULL, " +
                     "permission VARCHAR(45) NOT NULL, " +
                     "readonly VARCHAR(45) NOT NULL, " +
                     "PRIMARY KEY(userid)" +

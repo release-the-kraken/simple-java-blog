@@ -13,7 +13,6 @@ import java.util.Optional;
 
 import static config.Configuration.PASSWORD;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.InstanceOfAssertFactories.OPTIONAL;
 
 class UserDAOTest {
     Connection connection;
@@ -37,13 +36,13 @@ class UserDAOTest {
         Assertions.assertThrows(IllegalArgumentException.class, () -> userDAO.save(user));
     }
     @Test
-    void save_ShouldSaveUserToDatabaseAndReturnValidUserWithId_whenPassedValidUser(){
+    void save_ShouldSaveUserToDatabaseAndReturnValidUserWithId_whenPassedValidUserNotPresentInTheDatabase(){
         //given
         User user = User.builder()
-                .username("admin")
-                .password("admin")
-                .permission("superuser")
-                .readOnly("yes")
+                .username("user")
+                .password("1234")
+                .permission("user")
+                .readOnly("no")
                 .build();
         int userIdBeforeSaving = user.getUserid();
         //when
@@ -52,6 +51,17 @@ class UserDAOTest {
         //then
         assertThat(savedUser).isNotNull();
         assertThat(userIdBeforeSaving).isNotEqualTo(userIdAfterSaving);
+    }
+    @Test
+    void save_ShouldThrowException_whenPassedUserPresentInDatabase(){
+        //given
+        User user = User.builder()
+                .username("admin")
+                .password("admin")
+                .permission("superuser")
+                .readOnly("yes")
+                .build();
+        Assertions.assertThrows(RuntimeException.class, () -> userDAO.save(user));
     }
     @Test
     void login_ShouldReturnEmptyOptional_WhenPassedInvalidUsername() {
@@ -74,6 +84,13 @@ class UserDAOTest {
         Optional<User> userOptional = userDAO.login("admin", "admin");
         //then
         assertThat(userOptional).isNotEmpty();
+    }
+    @Test
+    void login_ShouldSetValidUsersId_WhenPassedValidUsernameAndPasswordForUserWithReadOnlyEqualNo() {
+        //when
+        Optional<User> userOptional = userDAO.login("user", "1234");
+        //then
+        assertThat(UserDAO.validatedUsersId).isNotEqualTo(0);
     }
 
 }
