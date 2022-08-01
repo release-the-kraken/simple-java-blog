@@ -1,13 +1,11 @@
-package utils;
-
-import lombok.RequiredArgsConstructor;
+package com.rtk.utils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import static config.Configuration.*;
+import static com.rtk.config.Configuration.*;
 
 /**
  *I've considered creating the database schema with an SQL query and operating on a previously prepared schema,
@@ -38,11 +36,11 @@ public class DatabaseCreator {
                     "userid INT NOT NULL, " +
                     "PRIMARY KEY(id)" +
                     ")");
-
+            //adding a UNIQUE constraint on username and password since those fields should be unique in a user database
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS user(" +
                     "userid INT NOT NULL AUTO_INCREMENT, " +
-                    "username VARCHAR(45) NOT NULL, " +
-                    "password VARCHAR(45) NOT NULL, " +
+                    "username VARCHAR(45) UNIQUE NOT NULL, " +
+                    "password VARCHAR(45) UNIQUE NOT NULL, " +
                     "permission VARCHAR(45) NOT NULL, " +
                     "readonly VARCHAR(45) NOT NULL, " +
                     "PRIMARY KEY(userid)" +
