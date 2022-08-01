@@ -1,19 +1,17 @@
-package blog;
+package com.rtk.user;
 
-import blog.model.User;
-import blog.model.UserDAO;
 import com.google.gson.Gson;
-import exceptions.UserDataValidationException;
+import com.rtk.exceptions.UserDataValidationException;
 import lombok.RequiredArgsConstructor;
 
 
-/*I've decided for a two tier architecture since there is no actual business logic like sorting or entity<->DTO mapping
+/*I've decided for two tier architecture since there is no actual business logic like sorting or entity<->DTO mapping
 that goes into the service layer*/
 @RequiredArgsConstructor
 public class UserController {
     //fields for dependency injection
     private final UserDAO userDAO;
-    Gson gson;
+    private final Gson gson;
 /*   I don't have to openly declare that the method throws an IllegalArgumentException,
       but I want to inform any future users of this method of that fact*/
     public String login(String username, String password) throws IllegalArgumentException, UserDataValidationException {

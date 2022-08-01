@@ -1,4 +1,4 @@
-package config;
+package com.rtk.config;
 
 public class Configuration {
     public static final String URL= "jdbc:mysql://localhost/blog_schema";

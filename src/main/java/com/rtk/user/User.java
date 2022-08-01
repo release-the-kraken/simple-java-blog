@@ -1,4 +1,4 @@
-package blog.model;
+package com.rtk.user;
 
 import lombok.Builder;
 import lombok.Getter;

@@ -1,6 +1,5 @@
-package blog.model;
+package com.rtk.user;
 
-import config.Configuration;
 import org.junit.jupiter.api.Assertions;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -11,9 +10,11 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Optional;
 
-import static config.Configuration.PASSWORD;
+import static com.rtk.config.Configuration.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
+//user tests rely on data in the database, which I realise ids not best practice,
+// but I needed to check if the methods actually do what they are supposed to
 class UserDAOTest {
     Connection connection;
     UserDAO userDAO;
@@ -21,7 +22,7 @@ class UserDAOTest {
     @BeforeEach
     void setUp() {
         try {
-            connection = DriverManager.getConnection(Configuration.URL, Configuration.USER, PASSWORD);
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

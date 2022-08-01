@@ -1,4 +1,4 @@
-package blog.model;
+package com.rtk.entry;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,13 +1,11 @@
-package utils;
-
-import lombok.RequiredArgsConstructor;
+package com.rtk.utils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import static config.Configuration.*;
+import static com.rtk.config.Configuration.*;
 
 /**
  *I've considered creating the database schema with an SQL query and operating on a previously prepared schema,

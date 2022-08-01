@@ -1,11 +1,13 @@
-package blog.model;
+package com.rtk.user;
 
+import com.rtk.utils.DatabaseCreator;
 import lombok.RequiredArgsConstructor;
-import utils.DatabaseCreator;
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
 import java.util.Optional;
 
+@Slf4j
 @RequiredArgsConstructor
 public class UserDAO {
     /*variable of keeping track of a logged-in user to pass their userid to newly created entries
@@ -15,7 +17,7 @@ public class UserDAO {
     //field for dependency injection
     private final Connection connection;
 
-    public User save(User user) throws RuntimeException {
+    User save(User user) throws RuntimeException {
         //although I am doing validation in the controller layer it is better to be safe than sorry and ensure
         // that an actual User object has been passed to the method,
         if (user == null) {
@@ -47,11 +49,12 @@ public class UserDAO {
             connection.commit();
             return user;
         } catch (SQLException e) {
+            log.info("SQL Exception: " + e.getMessage());
             throw new RuntimeException(e);
         }
     }
 
-    public Optional<User> login(String username, String password) {
+    Optional<User> login(String username, String password) {
         DatabaseCreator.createTables();
         try (connection) {
             //I want to return full information on the user to be used on the frontend in case of a successful query
@@ -80,6 +83,7 @@ public class UserDAO {
             }
             return Optional.ofNullable(user);
         } catch (SQLException e) {
+            log.info("SQL Exception: " + e.getMessage());
             return Optional.empty();
         }
     }
