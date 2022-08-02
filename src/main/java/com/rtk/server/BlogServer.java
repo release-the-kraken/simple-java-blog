@@ -57,7 +57,7 @@ public class BlogServer {
                             responseText = userController.login("admin", "amin");
                             exchange.sendResponseHeaders(200, responseText.getBytes().length);
                             outputStream.write(responseText.getBytes());
-                        }  catch (SQLException e) {
+                        } catch (SQLException e) {
                             errorMessage = String.format("{\"error_message\":\"%s\"}", e.getMessage());
                             outputStream.write(errorMessage.getBytes());
                         }
@@ -124,17 +124,25 @@ public class BlogServer {
         return requestURI.equals("/blog")
                 ? "" : requestURI.substring(requestURI.indexOf("=") + 1, requestURI.indexOf("&"));
     }
+
     //parsing requestURI to extract parameters into key, value pairs
     private static Map<String, String> getParameters(String requestURI) {
         if (requestURI == null || requestURI.isBlank()) {
             throw new IllegalArgumentException("Request URI cannot be blank.");
         }
+        Map<String, String> parameters = new HashMap<>();
+        //extracting request parameters string from request URI
         String parametersFromURI = requestURI.substring(requestURI.indexOf("&") + 1);
+        //mapping parameter pairs to list
         List<String> parameterPairs = List.of(parametersFromURI.split("&"));
+        //mapping parameter pairs list to map
+        parameterPairs.forEach(pair -> toHashMap(parameters, pair));
+        return parameters;
+    }
 
-        log.info(parameterPairs.toString());
-
-
-        return Collections.emptyMap();
+    private static void toHashMap(Map<String, String> parameters, String pair) {
+        String key = pair.substring(0, pair.indexOf("="));
+        String value = pair.substring(pair.indexOf("=") + 1);
+        parameters.put(key, value);
     }
 }
