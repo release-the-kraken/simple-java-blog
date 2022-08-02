@@ -1,8 +1,9 @@
 package com.rtk.user;
 
 import com.google.gson.Gson;
-import com.rtk.exceptions.UserDataValidationException;
 import lombok.RequiredArgsConstructor;
+
+import java.sql.SQLException;
 
 
 /*I've decided for two tier architecture since there is no actual business logic like sorting or entity<->DTO mapping
@@ -14,19 +15,21 @@ public class UserController {
     private final Gson gson;
 /*   I don't have to openly declare that the method throws an IllegalArgumentException,
       but I want to inform any future users of this method of that fact*/
-    public String login(String username, String password) throws IllegalArgumentException, UserDataValidationException {
+    public String login(String username, String password) throws IllegalArgumentException, SQLException {
         if (username == null || username.isBlank()) {
             throw new IllegalArgumentException("Username cannot be empty");
         }
         if (password == null || password.isBlank()) {
             throw new IllegalArgumentException("Password cannot be empty");
         }
-        return userDAO.login(username, password)
+        String resp = userDAO.login(username, password)
                 .map(user -> gson.toJson(user))
-                .orElseThrow(() -> new UserDataValidationException("Invalid username or password"));
+                .orElseGet(() -> "{\"error_message\":\"Invalid username or password.\"}");
+        System.out.println(resp);
+        return resp;
     }
     //returning a String to inform the client of success
-    public String addUser(String username, String password, String permission, String readonly) throws IllegalArgumentException {
+    public String addUser(String username, String password, String permission, String readonly) throws IllegalArgumentException, SQLException {
         if (username == null || username.isBlank()) {
             throw new IllegalArgumentException("Username cannot be empty");
         }

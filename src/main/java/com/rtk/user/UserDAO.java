@@ -17,14 +17,14 @@ public class UserDAO {
     //field for dependency injection
     private final Connection connection;
 
-    User save(User user) throws RuntimeException {
+    User save(User user) throws SQLException {
         //although I am doing validation in the controller layer it is better to be safe than sorry and ensure
         // that an actual User object has been passed to the method,
         if (user == null) {
             throw new IllegalArgumentException("Failed to insert user. User is null.");
         }
         DatabaseCreator.createTables();
-        try (connection) {
+
             //because I'm performing more than one database operation I want to be sure that both queries will be executed
             connection.setAutoCommit(false);
             PreparedStatement preparedStatement = connection
@@ -48,44 +48,37 @@ public class UserDAO {
             }
             connection.commit();
             return user;
-        } catch (SQLException e) {
-            log.info("SQL Exception: " + e.getMessage());
-            throw new RuntimeException(e);
-        }
+
     }
 
-    Optional<User> login(String username, String password) {
+    Optional<User> login(String username, String password) throws SQLException {
         DatabaseCreator.createTables();
-        try (connection) {
-            //I want to return full information on the user to be used on the frontend in case of a successful query
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM user " +
-                    "WHERE username=? AND password=?");
-            preparedStatement.setString(1, username);
-            preparedStatement.setString(2, password);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            User user = null;
-            if (resultSet.next()) {
-                int userid = resultSet.getInt("userid");
-                String name = resultSet.getString("username");
-                String secret = resultSet.getString("password");
-                String permission = resultSet.getString("permission");
-                String readonly = resultSet.getString("readonly");
-                user = User.builder()
-                        .userid(userid)
-                        .username(name)
-                        .password(secret)
-                        .permission(permission)
-                        .readOnly(readonly)
-                        .build();
-                if ("no".equals(readonly)) {
-                    validatedUsersId = userid;
-                }
+        //I want to return full information on the user to be used on the frontend in case of a successful query
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM user " +
+                "WHERE username=? AND password=?");
+        preparedStatement.setString(1, username);
+        preparedStatement.setString(2, password);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        User user = null;
+        if (resultSet.next()) {
+            int userid = resultSet.getInt("userid");
+            String name = resultSet.getString("username");
+            String secret = resultSet.getString("password");
+            String permission = resultSet.getString("permission");
+            String readonly = resultSet.getString("readonly");
+            user = User.builder()
+                    .userid(userid)
+                    .username(name)
+                    .password(secret)
+                    .permission(permission)
+                    .readOnly(readonly)
+                    .build();
+            if ("no".equals(readonly)) {
+                validatedUsersId = userid;
             }
-            return Optional.ofNullable(user);
-        } catch (SQLException e) {
-            log.info("SQL Exception: " + e.getMessage());
-            return Optional.empty();
         }
+
+        return Optional.ofNullable(user);
     }
 
 }

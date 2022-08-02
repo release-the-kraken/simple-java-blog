@@ -37,7 +37,7 @@ class UserDAOTest {
         Assertions.assertThrows(IllegalArgumentException.class, () -> userDAO.save(user));
     }
     @Test
-    void save_ShouldSaveUserToDatabaseAndReturnValidUserWithId_whenPassedValidUserNotPresentInTheDatabase(){
+    void save_ShouldSaveUserToDatabaseAndReturnValidUserWithId_whenPassedValidUserNotPresentInTheDatabase() throws SQLException {
         //given
         User user = User.builder()
                 .username("user")
@@ -65,14 +65,14 @@ class UserDAOTest {
         Assertions.assertThrows(RuntimeException.class, () -> userDAO.save(user));
     }
     @Test
-    void login_ShouldReturnEmptyOptional_WhenPassedInvalidUsername() {
+    void login_ShouldReturnEmptyOptional_WhenPassedInvalidUsername() throws SQLException {
         //when
         Optional<User> userOptional = userDAO.login("user", "admin");
         //then
         assertThat(userOptional).isEmpty();
     }
     @Test
-    void login_ShouldReturnEmptyOptional_WhenPassedInvalidPassword() {
+    void login_ShouldReturnEmptyOptional_WhenPassedInvalidPassword() throws SQLException {
         //when
         Optional<User> userOptional = userDAO.login("admin", "1234");
         //then
@@ -80,14 +80,14 @@ class UserDAOTest {
     }
 
     @Test
-    void login_ShouldNotReturnEmptyOptional_WhenPassedValidUsernameAndPassword() {
+    void login_ShouldNotReturnEmptyOptional_WhenPassedValidUsernameAndPassword() throws SQLException {
         //when
         Optional<User> userOptional = userDAO.login("admin", "admin");
         //then
         assertThat(userOptional).isNotEmpty();
     }
     @Test
-    void login_ShouldSetValidUsersId_WhenPassedValidUsernameAndPasswordForUserWithReadOnlyEqualNo() {
+    void login_ShouldSetValidUsersId_WhenPassedValidUsernameAndPasswordForUserWithReadOnlyEqualNo() throws SQLException {
         //when
         Optional<User> userOptional = userDAO.login("user", "1234");
         //then

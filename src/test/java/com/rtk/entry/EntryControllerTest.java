@@ -52,4 +52,5 @@ class EntryControllerTest {
     void deleteEntry_ShouldThrowException_WhenPassedIdLessThan1() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> entryController.deleteEntry(0));
     }
+
 }
