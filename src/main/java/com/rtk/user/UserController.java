@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 
 import java.sql.SQLException;
+import java.util.Optional;
 
 
 /*I've decided for two tier architecture since there is no actual business logic like sorting or entity<->DTO mapping
@@ -22,13 +23,11 @@ public class UserController {
         if (password == null || password.isBlank()) {
             throw new IllegalArgumentException("Password cannot be empty");
         }
-        String resp = userDAO.login(username, password)
+        return userDAO.login(username, password)
                 .map(user -> gson.toJson(user))
                 .orElseGet(() -> "{\"error_message\":\"Invalid username or password.\"}");
-        System.out.println(resp);
-        return resp;
     }
-    //returning a String to inform the client of success
+    //returning a String to inform the client of success or failure
     public String addUser(String username, String password, String permission, String readonly) throws IllegalArgumentException, SQLException {
         if (username == null || username.isBlank()) {
             throw new IllegalArgumentException("Username cannot be empty");
@@ -49,7 +48,11 @@ public class UserController {
                 .permission(permission)
                 .readOnly(readonly)
                 .build();
-        User savedUser = userDAO.save(user);
-        return gson.toJson(savedUser);
+        Optional<User> savedUser = userDAO.save(user);
+        if(savedUser.isEmpty()){
+            return String.format("{\"message\":\"User %s already exists.\"}", username);
+        }else {
+            return gson.toJson(savedUser.get());
+        }
     }
 }

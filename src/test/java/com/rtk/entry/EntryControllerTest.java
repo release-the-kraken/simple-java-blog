@@ -1,7 +1,6 @@
 package com.rtk.entry;
 
 import com.google.gson.Gson;
-import com.rtk.exceptions.UserNotLoggedInException;
 import com.rtk.user.UserDAO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +30,7 @@ class EntryControllerTest {
     }
 
     @Test
-    void listAllEntries_ShouldReturnArray() {
+    void listAllEntries_ShouldReturnArray() throws SQLException {
         //given
         String type = entryController
                 .listAllEntries();
@@ -39,14 +38,7 @@ class EntryControllerTest {
         assertThat(entryController.listAllEntries()).isEqualTo("[]");
     }
 
-    @Test
-    void addEntry_ShouldThrowException_whenUserIsNotLoggedIn() {
-        //given
-        UserDAO.validatedUsersId = -1; //setting up the variable to perform tests without the need to actually log in
 
-        //then
-        Assertions.assertThrows(UserNotLoggedInException.class, () -> entryController.addEntry("Lorem ipsum"));
-    }
 
     @Test
     void deleteEntry_ShouldThrowException_WhenPassedIdLessThan1() {

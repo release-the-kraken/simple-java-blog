@@ -1,6 +1,5 @@
 package com.rtk.entry;
 
-import com.rtk.exceptions.UserNotLoggedInException;
 import com.rtk.user.UserDAO;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +26,7 @@ public class EntryController {
     public String addEntry(String text) throws SQLException {
         //check if user is logged in
         if(UserDAO.validatedUsersId <= 0){
-            throw new UserNotLoggedInException("Adding entries only possible when user is logged in.");
+            return "{\"error_message\":\"Adding entries only possible when user is logged in.\"}";
         }
         if(text == null || text.isBlank()){
             throw new IllegalArgumentException("Text cannot be empty.");
