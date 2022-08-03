@@ -6,7 +6,7 @@
 
     <groupId>com.rtk</groupId>
     <artifactId>blog</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
     <dependencies>
         <dependency>
             <groupId>mysql</groupId>
@@ -43,8 +43,14 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.2.3</version>
+            <version>1.2.11</version>
         </dependency>
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>4.0.0</version>
+        </dependency>
+
     </dependencies>
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
